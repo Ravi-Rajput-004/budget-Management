@@ -23,10 +23,13 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [slowLoading, setSlowLoading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = async (silent = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
+      else setIsUpdating(true);
+      
       setError(null);
       const [budgetRes, expensesRes, statsRes] = await Promise.all([
         budgetService.getBudget(currentMonth, currentYear),
@@ -36,28 +39,37 @@ const Dashboard = () => {
       setBudget(budgetRes.data);
       setExpenses(expensesRes.data);
       setStats(statsRes.data);
+      
       setLoading(false);
+      setIsUpdating(false);
       setSlowLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
       setError(error.message || 'Failed to fetch data');
       setLoading(false);
+      setIsUpdating(false);
       setSlowLoading(false);
     }
   };
 
   useEffect(() => {
     let timeoutId;
-    if (loading) {
+    if (loading && !budget.amount) {
       timeoutId = setTimeout(() => {
         setSlowLoading(true);
       }, 5000);
     }
     return () => clearTimeout(timeoutId);
-  }, [loading]);
+  }, [loading, budget.amount]);
 
   useEffect(() => {
-    fetchData();
+    fetchData(); // Initial load - full page spinner
+  }, []);
+
+  useEffect(() => {
+    if (loading === false) {
+      fetchData(true); // Silent load when month/year changes
+    }
   }, [currentMonth, currentYear]);
 
   const handleAddExpense = async (expenseData) => {
@@ -66,7 +78,7 @@ const Dashboard = () => {
         ...expenseData,
         date: new Date(currentYear, currentMonth - 1, new Date().getDate())
       });
-      fetchData();
+      fetchData(true);
       Swal.fire({
         toast: true,
         position: 'top-end',
@@ -83,7 +95,7 @@ const Dashboard = () => {
   const handleDeleteExpense = async (id) => {
     try {
       await expenseService.deleteExpense(id);
-      fetchData();
+      fetchData(true);
       Swal.fire({
         toast: true,
         position: 'top-end',
@@ -104,7 +116,7 @@ const Dashboard = () => {
         month: currentMonth,
         year: currentYear
       });
-      fetchData();
+      fetchData(true);
       Swal.fire({ icon: 'success', title: 'Settings Updated', text: 'Your budget limits have been saved.', timer: 1500 });
     } catch (error) {
       Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to update budget' });
@@ -118,7 +130,7 @@ const Dashboard = () => {
         month: currentMonth,
         year: currentYear
       });
-      fetchData();
+      fetchData(true);
       Swal.fire({ icon: 'success', title: 'Top-up Successful', text: '₹1,000 has been added to your budget.', timer: 1500 });
     } catch (error) {
       Swal.fire({ icon: 'error', title: 'Error', text: 'Failed to add balance' });
@@ -172,6 +184,7 @@ const Dashboard = () => {
         </div>
 
         <div className="filter-bar">
+          {isUpdating && <RefreshCw className="spin" size={14} style={{ marginRight: '8px', color: 'var(--primary)' }} />}
           <Calendar size={18} color="var(--primary)" />
           <select 
             className="filter-select" 
