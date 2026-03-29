@@ -1,6 +1,14 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const getApiUrl = () => {
+  const envUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  const normalized = envUrl.endsWith('/api') || envUrl.endsWith('/api/') 
+    ? envUrl 
+    : `${envUrl.replace(/\/$/, '')}/api`;
+  return normalized.endsWith('/') ? normalized : `${normalized}/`;
+};
+
+const API_URL = getApiUrl();
 
 const api = axios.create({
   baseURL: API_URL,
@@ -10,15 +18,15 @@ const api = axios.create({
 });
 
 export const budgetService = {
-  getBudget: (month, year) => api.get(`/budget?month=${month}&year=${year}`),
-  updateBudget: (budgetData) => api.post('/budget', budgetData), // amount, threshold, month, year
+  getBudget: (month, year) => api.get(`budget?month=${month}&year=${year}`),
+  updateBudget: (budgetData) => api.post('budget', budgetData), // amount, threshold, month, year
 };
 
 export const expenseService = {
-  getExpenses: (month, year) => api.get(`/expenses?month=${month}&year=${year}`),
-  addExpense: (expenseData) => api.post('/expenses', expenseData),
-  deleteExpense: (id) => api.delete(`/expenses/${id}`),
-  getStats: (month, year) => api.get(`/expenses/stats?month=${month}&year=${year}`),
+  getExpenses: (month, year) => api.get(`expenses?month=${month}&year=${year}`),
+  addExpense: (expenseData) => api.post('expenses', expenseData),
+  deleteExpense: (id) => api.delete(`expenses/${id}`),
+  getStats: (month, year) => api.get(`expenses/stats?month=${month}&year=${year}`),
 };
 
 export default api;
