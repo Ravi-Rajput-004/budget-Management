@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import budgetRoutes from './routes/budgetRoutes.js';
 import expenseRoutes from './routes/expenseRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/api/budget', budgetRoutes);
 app.use('/api/expenses', expenseRoutes);
+app.use('/api/auth', authRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

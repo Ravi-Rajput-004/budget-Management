@@ -4,7 +4,8 @@ import BudgetSummary from '../components/BudgetSummary';
 import ExpenseForm from '../components/ExpenseForm';
 import CategoryChart from '../components/CategoryChart';
 import RecentExpenses from '../components/RecentExpenses';
-import { LayoutDashboard, Calendar, RefreshCw } from 'lucide-react';
+import { LayoutDashboard, Calendar, RefreshCw, LogOut } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import Swal from 'sweetalert2';
 
 const MONTHS = [
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const [error, setError] = useState(null);
   const [slowLoading, setSlowLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const { user, logout } = useAuth();
 
   const fetchData = async (silent = false) => {
     try {
@@ -185,6 +187,22 @@ const Dashboard = () => {
 
         <div className="filter-bar">
           {isUpdating && <RefreshCw className="spin" size={14} style={{ marginRight: '8px', color: 'var(--primary)' }} />}
+          
+          <div className="user-profile" style={{ marginRight: '1rem', paddingRight: '1.5rem', borderRight: '1px solid var(--border)' }}>
+            <div className="user-info">
+              <div className="user-name">{user?.name}</div>
+              <div className="user-email">{user?.email}</div>
+            </div>
+            <button 
+              onClick={logout} 
+              className="btn-outline" 
+              style={{ padding: '8px', borderRadius: '10px' }}
+              title="Logout"
+            >
+              <LogOut size={18} />
+            </button>
+          </div>
+
           <Calendar size={18} color="var(--primary)" />
           <select 
             className="filter-select" 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PlusCircle, Sliders } from 'lucide-react';
+import { PlusCircle, Sliders, Tag, IndianRupee, Layers } from 'lucide-react';
 import Swal from 'sweetalert2';
 
 const ExpenseForm = ({ onAdd, onBudgetUpdate, currentBudget, totalSpent }) => {
@@ -75,36 +75,45 @@ const ExpenseForm = ({ onAdd, onBudgetUpdate, currentBudget, totalSpent }) => {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label className="label">Title</label>
-            <input 
-              className="input" 
-              placeholder="Rent, Groceries..." 
-              value={title} 
-              onChange={(e) => setTitle(e.target.value)}
-              required
-            />
+            <div className="input-group">
+              <input 
+                className="input" 
+                placeholder="Rent, Groceries..." 
+                value={title} 
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+              <Tag size={18} className="input-icon" />
+            </div>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <div className="form-group">
               <label className="label">Amount</label>
-              <input 
-                className="input" 
-                type="number" 
-                placeholder="0.00" 
-                value={amount} 
-                onChange={(e) => setAmount(e.target.value)}
-                required
-              />
+              <div className="input-group">
+                <input 
+                  className="input" 
+                  type="number" 
+                  placeholder="0.00" 
+                  value={amount} 
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                />
+                <IndianRupee size={18} className="input-icon" />
+              </div>
             </div>
             <div className="form-group">
               <label className="label">Category</label>
-              <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
-                <option value="Food">Food</option>
-                <option value="Transport">Transport</option>
-                <option value="Utilities">Utilities</option>
-                <option value="Entertainment">Entertainment</option>
-                <option value="Housing">Housing</option>
-                <option value="Other">Other</option>
-              </select>
+              <div className="input-group">
+                <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
+                  <option value="Food">Food</option>
+                  <option value="Transport">Transport</option>
+                  <option value="Utilities">Utilities</option>
+                  <option value="Entertainment">Entertainment</option>
+                  <option value="Housing">Housing</option>
+                  <option value="Other">Other</option>
+                </select>
+                <Layers size={18} className="input-icon" />
+              </div>
             </div>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
@@ -128,23 +137,29 @@ const ExpenseForm = ({ onAdd, onBudgetUpdate, currentBudget, totalSpent }) => {
         <form onSubmit={handleBudgetSubmit}>
           <div className="form-group">
             <label className="label">Set Monthly Budget Amount</label>
-            <input 
-              className="input" 
-              type="number" 
-              value={budgetAmount} 
-              onChange={(e) => setBudgetAmount(e.target.value)}
-              required
-            />
+            <div className="input-group">
+              <input 
+                className="input" 
+                type="number" 
+                value={budgetAmount} 
+                onChange={(e) => setBudgetAmount(e.target.value)}
+                required
+              />
+              <IndianRupee size={18} className="input-icon" />
+            </div>
           </div>
           <div className="form-group">
             <label className="label">Low Balance Alert Threshold</label>
-            <input 
-              className="input" 
-              type="number" 
-              value={threshold} 
-              onChange={(e) => setThreshold(e.target.value)}
-              required
-            />
+            <div className="input-group">
+              <input 
+                className="input" 
+                type="number" 
+                value={threshold} 
+                onChange={(e) => setThreshold(e.target.value)}
+                required
+              />
+              <IndianRupee size={18} className="input-icon" />
+            </div>
           </div>
           <button type="submit" className="btn btn-outline" style={{ width: '100%', marginTop: '0.5rem' }}>
             <Sliders size={18} /> Update Limits

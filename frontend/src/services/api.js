@@ -19,6 +19,23 @@ const api = axios.create({
   },
 });
 
+// Add a request interceptor to include the User ID
+api.interceptors.request.use((config) => {
+  const savedUser = localStorage.getItem('budget_user');
+  if (savedUser) {
+    const user = JSON.parse(savedUser);
+    config.headers['x-user-id'] = user._id;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+export const authService = {
+  login: (credentials) => api.post('auth/login', credentials),
+  register: (userData) => api.post('auth/register', userData),
+};
+
 export const budgetService = {
   getBudget: (month, year) => api.get(`budget?month=${month}&year=${year}`),
   updateBudget: (budgetData) => api.post('budget', budgetData), // amount, threshold, month, year

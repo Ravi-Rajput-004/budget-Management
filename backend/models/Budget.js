@@ -18,6 +18,11 @@ const budgetSchema = new mongoose.Schema({
   threshold: {
     type: Number,
     default: 1000
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Please add a user ID']
   }
 }, {
   timestamps: true
