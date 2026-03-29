@@ -21,9 +21,13 @@ const Dashboard = () => {
   const [expenses, setExpenses] = useState([]);
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [slowLoading, setSlowLoading] = useState(false);
 
   const fetchData = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const [budgetRes, expensesRes, statsRes] = await Promise.all([
         budgetService.getBudget(currentMonth, currentYear),
         expenseService.getExpenses(currentMonth, currentYear),
@@ -33,11 +37,24 @@ const Dashboard = () => {
       setExpenses(expensesRes.data);
       setStats(statsRes.data);
       setLoading(false);
+      setSlowLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
+      setError(error.message || 'Failed to fetch data');
       setLoading(false);
+      setSlowLoading(false);
     }
   };
+
+  useEffect(() => {
+    let timeoutId;
+    if (loading) {
+      timeoutId = setTimeout(() => {
+        setSlowLoading(true);
+      }, 5000);
+    }
+    return () => clearTimeout(timeoutId);
+  }, [loading]);
 
   useEffect(() => {
     fetchData();
@@ -112,8 +129,32 @@ const Dashboard = () => {
   const savings = budget.amount - totalSpent;
 
   if (loading) return (
-    <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center', background: 'var(--background)' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', alignItems: 'center', justifyContent: 'center', background: 'var(--background)', gap: '1rem' }}>
       <RefreshCw className="spin" style={{ color: 'var(--primary)', height: '40px', width: '40px' }} />
+      {slowLoading && (
+        <div style={{ textAlign: 'center', animation: 'fadeIn 0.5s ease-in' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Server is taking longer than usual to respond...</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>The server might be "waking up" (Cold Start). Please wait a few more seconds.</p>
+        </div>
+      )}
+    </div>
+  );
+
+  if (error) return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', alignItems: 'center', justifyContent: 'center', background: 'var(--background)', gap: '1.5rem', padding: '2rem', textAlign: 'center' }}>
+      <div style={{ fontSize: '1rem', color: '#ef4444', fontWeight: '500' }}>
+        ⚠️ Connection Error
+      </div>
+      <p style={{ color: 'var(--text-muted)', maxWidth: '400px' }}>
+        We couldn't reach the server. Please check your internet or retry.
+      </p>
+      <button 
+        onClick={fetchData}
+        className="btn-primary"
+        style={{ padding: '0.75rem 1.5rem', borderRadius: '12px' }}
+      >
+        Try Again
+      </button>
     </div>
   );
 

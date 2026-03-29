@@ -48,12 +48,23 @@ const ExpenseForm = ({ onAdd, onBudgetUpdate, currentBudget, totalSpent }) => {
     }
 
     onAdd({ title, amount: expenseAmount, category });
+    handleClear();
+  };
+
+  const handleClear = () => {
     setTitle('');
     setAmount('');
+    setCategory('Food');
+    setBudgetAmount('');
+    setThreshold('');
   };
 
   const handleBudgetSubmit = (e) => {
     e.preventDefault();
+    if (!budgetAmount || !threshold) {
+      Swal.fire({ icon: 'warning', title: 'Empty Fields', text: 'Please enter budget and threshold values.' });
+      return;
+    }
     onBudgetUpdate({ amount: parseFloat(budgetAmount), threshold: parseFloat(threshold) });
   };
 
@@ -96,9 +107,19 @@ const ExpenseForm = ({ onAdd, onBudgetUpdate, currentBudget, totalSpent }) => {
               </select>
             </div>
           </div>
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '0.5rem' }}>
-            <PlusCircle size={18} /> Record Expense
-          </button>
+          <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
+            <button type="submit" className="btn btn-primary" style={{ flex: 2 }}>
+              <PlusCircle size={18} /> Record Expense
+            </button>
+            <button 
+              type="button" 
+              onClick={handleClear} 
+              className="btn btn-outline" 
+              style={{ flex: 1, borderColor: 'var(--secondary)', color: 'var(--text-muted)' }}
+            >
+              Clear
+            </button>
+          </div>
         </form>
       </div>
 
