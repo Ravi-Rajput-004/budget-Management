@@ -78,7 +78,7 @@ const Dashboard = () => {
     try {
       await expenseService.addExpense({
         ...expenseData,
-        date: new Date(currentYear, currentMonth - 1, new Date().getDate())
+        date: new Date(Date.UTC(currentYear, currentMonth - 1, new Date().getDate()))
       });
       fetchData(true);
       Swal.fire({

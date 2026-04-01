@@ -10,8 +10,8 @@ export const getExpenses = async (req, res) => {
       return res.status(401).json({ message: 'User ID required' });
     }
     
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59);
+    const startDate = new Date(Date.UTC(year, month - 1, 1));
+    const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
 
     const expenses = await Expense.find({
       userId: new mongoose.Types.ObjectId(userId),
@@ -73,8 +73,8 @@ export const getExpenseStats = async (req, res) => {
       return res.status(401).json({ message: 'User ID required' });
     }
     
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59);
+    const startDate = new Date(Date.UTC(year, month - 1, 1));
+    const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
 
     const stats = await Expense.aggregate([
       {
