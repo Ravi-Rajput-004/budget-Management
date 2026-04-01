@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Budget from '../models/Budget.js';
 import { getRequestParams } from '../utils/helpers.js';
 
@@ -9,10 +10,10 @@ export const getBudget = async (req, res) => {
       return res.status(401).json({ message: 'User ID required' });
     }
     
-    let budget = await Budget.findOne({ month, year, userId });
+    let budget = await Budget.findOne({ month, year, userId: new mongoose.Types.ObjectId(userId) });
     
     if (!budget) {
-      budget = await Budget.create({ amount: 0, month, year, threshold: 0, userId });
+      budget = await Budget.create({ amount: 0, month, year, threshold: 0, userId: new mongoose.Types.ObjectId(userId) });
     }
     
     res.status(200).json(budget);
@@ -33,7 +34,7 @@ export const updateBudget = async (req, res) => {
       return res.status(401).json({ message: 'User ID required' });
     }
     
-    let budget = await Budget.findOne({ month, year, userId });
+    let budget = await Budget.findOne({ month, year, userId: new mongoose.Types.ObjectId(userId) });
     
     if (budget) {
       if (amount !== undefined) budget.amount = amount;
@@ -46,7 +47,7 @@ export const updateBudget = async (req, res) => {
         threshold: threshold || 0, 
         month, 
         year,
-        userId
+        userId: new mongoose.Types.ObjectId(userId)
       });
       res.status(201).json(newBudget);
     }

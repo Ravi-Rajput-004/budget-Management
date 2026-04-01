@@ -14,7 +14,7 @@ export const getExpenses = async (req, res) => {
     const endDate = new Date(year, month, 0, 23, 59, 59);
 
     const expenses = await Expense.find({
-      userId,
+      userId: new mongoose.Types.ObjectId(userId),
       date: { $gte: startDate, $lte: endDate }
     }).sort({ date: -1 });
     res.status(200).json(expenses);
@@ -53,7 +53,7 @@ export const deleteExpense = async (req, res) => {
       return res.status(401).json({ message: 'User ID required' });
     }
     
-    const expense = await Expense.findOne({ _id: req.params.id, userId });
+    const expense = await Expense.findOne({ _id: req.params.id, userId: new mongoose.Types.ObjectId(userId) });
     
     if (!expense) {
       return res.status(404).json({ message: 'Expense not found' });
