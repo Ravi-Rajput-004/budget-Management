@@ -310,7 +310,7 @@ body {
   pointer-events: none;
 }
 
-/* Auth Styles - Premium Split Pane */
+
 .auth-page-wrapper {
   min-height: 100vh;
   display: flex;
@@ -510,7 +510,7 @@ body {
   border: 1px solid #fee2e2;
 }
 
-/* User Profile Styling for Dashboard */
+
 .user-profile {
   display: flex;
   align-items: center;

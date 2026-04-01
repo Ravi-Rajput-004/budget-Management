@@ -1,11 +1,10 @@
 import Expense from '../models/Expense.js';
 import mongoose from 'mongoose';
+import { getRequestParams } from '../utils/helpers.js';
 
 export const getExpenses = async (req, res) => {
   try {
-    const month = parseInt(req.query.month) || new Date().getMonth() + 1;
-    const year = parseInt(req.query.year) || new Date().getFullYear();
-    const userId = req.headers['x-user-id'];
+    const { month, year, userId } = getRequestParams(req);
 
     if (!userId) {
       return res.status(401).json({ message: 'User ID required' });
@@ -27,7 +26,7 @@ export const getExpenses = async (req, res) => {
 export const addExpense = async (req, res) => {
   try {
     const { title, amount, category, date } = req.body;
-    const userId = req.headers['x-user-id'];
+    const { userId } = getRequestParams(req);
 
     if (!userId) {
       return res.status(401).json({ message: 'User ID required' });
@@ -48,7 +47,7 @@ export const addExpense = async (req, res) => {
 
 export const deleteExpense = async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
+    const { userId } = getRequestParams(req);
 
     if (!userId) {
       return res.status(401).json({ message: 'User ID required' });
@@ -68,9 +67,7 @@ export const deleteExpense = async (req, res) => {
 
 export const getExpenseStats = async (req, res) => {
   try {
-    const month = parseInt(req.query.month) || new Date().getMonth() + 1;
-    const year = parseInt(req.query.year) || new Date().getFullYear();
-    const userId = req.headers['x-user-id'];
+    const { month, year, userId } = getRequestParams(req);
 
     if (!userId) {
       return res.status(401).json({ message: 'User ID required' });

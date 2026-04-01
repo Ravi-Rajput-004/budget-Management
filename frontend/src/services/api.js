@@ -1,13 +1,8 @@
 import axios from 'axios';
 
 const getApiUrl = () => {
-  let envUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-  
-  if (!envUrl.includes('/api')) {
-    envUrl = envUrl.endsWith('/') ? `${envUrl}api` : `${envUrl}/api`;
-  }
-  
-  return envUrl.endsWith('/') ? envUrl : `${envUrl}/`;
+  const base = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  return base.endsWith('/') ? base : `${base}/`;
 };
 
 const API_URL = getApiUrl();
@@ -19,7 +14,7 @@ const api = axios.create({
   },
 });
 
-// Add a request interceptor to include the User ID
+
 api.interceptors.request.use((config) => {
   const savedUser = localStorage.getItem('budget_user');
   if (savedUser) {
@@ -38,7 +33,7 @@ export const authService = {
 
 export const budgetService = {
   getBudget: (month, year) => api.get(`budget?month=${month}&year=${year}`),
-  updateBudget: (budgetData) => api.post('budget', budgetData), // amount, threshold, month, year
+  updateBudget: (budgetData) => api.post('budget', budgetData),
 };
 
 export const expenseService = {

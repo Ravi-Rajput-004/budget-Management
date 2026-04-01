@@ -7,11 +7,11 @@ const ExpenseForm = ({ onAdd, onBudgetUpdate, currentBudget, totalSpent }) => {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('Food');
   const [budgetAmount, setBudgetAmount] = useState(currentBudget?.amount || 0);
-  const [threshold, setThreshold] = useState(currentBudget?.threshold || 1000);
+  const [threshold, setThreshold] = useState(currentBudget?.threshold || 0);
 
   useEffect(() => {
     setBudgetAmount(currentBudget?.amount || 0);
-    setThreshold(currentBudget?.threshold || 1000);
+    setThreshold(currentBudget?.threshold || 0);
   }, [currentBudget]);
 
   const handleSubmit = async (e) => {

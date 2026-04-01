@@ -64,7 +64,7 @@ function Auth() {
   return (
     <div className="auth-page-wrapper">
       <div className="auth-dual-panel">
-        {/* Left Side: Illustration */}
+
         <div className="auth-illustration-side">
           <div className="auth-image-container">
             <img src="/auth-image.png" alt="Budget Management" />
@@ -73,7 +73,7 @@ function Auth() {
           <p>Take control of your finances with our simple and powerful budget tracking tool.</p>
         </div>
 
-        {/* Right Side: Form */}
+
         <div className="auth-form-side">
           <div className="auth-form-header">
             <h1>{isLogin ? 'Welcome Back' : 'Get Started'}</h1>

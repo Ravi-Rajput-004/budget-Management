@@ -17,8 +17,7 @@ function AppContent() {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    // Only show splash if user is authenticated (entering dashboard)
-    if (!isAuthenticated) {
+     if (!isAuthenticated) {
       setShowSplash(false);
       return;
     }

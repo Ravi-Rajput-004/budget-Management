@@ -1,8 +1,6 @@
 import User from '../models/User.js';
 
-// @desc    Register user
-// @route   POST /api/auth/register
-// @access  Public
+
 export const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -16,7 +14,7 @@ export const register = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password // Simple password storage for now
+      password 
     });
 
     if (user) {
@@ -33,9 +31,7 @@ export const register = async (req, res) => {
   }
 };
 
-// @desc    Authenticate user
-// @route   POST /api/auth/login
-// @access  Public
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;

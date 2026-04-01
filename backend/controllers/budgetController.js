@@ -1,10 +1,9 @@
 import Budget from '../models/Budget.js';
+import { getRequestParams } from '../utils/helpers.js';
 
 export const getBudget = async (req, res) => {
   try {
-    const month = parseInt(req.query.month) || new Date().getMonth() + 1;
-    const year = parseInt(req.query.year) || new Date().getFullYear();
-    const userId = req.headers['x-user-id'];
+    const { month, year, userId } = getRequestParams(req);
 
     if (!userId) {
       return res.status(401).json({ message: 'User ID required' });
@@ -13,7 +12,7 @@ export const getBudget = async (req, res) => {
     let budget = await Budget.findOne({ month, year, userId });
     
     if (!budget) {
-      budget = await Budget.create({ amount: 0, month, year, threshold: 1000, userId });
+      budget = await Budget.create({ amount: 0, month, year, threshold: 0, userId });
     }
     
     res.status(200).json(budget);
@@ -24,15 +23,15 @@ export const getBudget = async (req, res) => {
 
 export const updateBudget = async (req, res) => {
   try {
-    const { amount, threshold, month: reqMonth, year: reqYear } = req.body;
-    const userId = req.headers['x-user-id'];
+    const { amount, threshold, month: bodyMonth, year: bodyYear } = req.body;
+    const { month: qMonth, year: qYear, userId } = getRequestParams(req);
+    
+    const month = bodyMonth || qMonth;
+    const year = bodyYear || qYear;
 
     if (!userId) {
       return res.status(401).json({ message: 'User ID required' });
     }
-    
-    const month = reqMonth || new Date().getMonth() + 1;
-    const year = reqYear || new Date().getFullYear();
     
     let budget = await Budget.findOne({ month, year, userId });
     
@@ -44,7 +43,7 @@ export const updateBudget = async (req, res) => {
     } else {
       const newBudget = await Budget.create({ 
         amount: amount || 0, 
-        threshold: threshold || 1000, 
+        threshold: threshold || 0, 
         month, 
         year,
         userId

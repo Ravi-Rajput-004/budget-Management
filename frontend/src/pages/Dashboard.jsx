@@ -18,7 +18,7 @@ const YEARS = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - 2 +
 const Dashboard = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-  const [budget, setBudget] = useState({ amount: 0, threshold: 1000 });
+  const [budget, setBudget] = useState({ amount: 0, threshold: 0 });
   const [expenses, setExpenses] = useState([]);
   const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -65,12 +65,12 @@ const Dashboard = () => {
   }, [loading, budget.amount]);
 
   useEffect(() => {
-    fetchData(); // Initial load - full page spinner
+    fetchData(); 
   }, []);
 
   useEffect(() => {
     if (loading === false) {
-      fetchData(true); // Silent load when month/year changes
+      fetchData(true);  
     }
   }, [currentMonth, currentYear]);
 
